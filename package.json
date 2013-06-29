@@ -1,0 +1,21 @@
+{
+  "name": "promises-benchmark",
+  "version": "0.0.0",
+  "description": "Benchmarks for asynchronous operations.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/killdream/promises-benchmark.git"
+  },
+  "keywords": [
+    "promises",
+    "benchmark",
+    "asynchronous"
+  ],
+  "author": "Quildreen \"Sorella\" Motta",
+  "license": "WTFPL",
+  "readmeFilename": "README.md"
+}
