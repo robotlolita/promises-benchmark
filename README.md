@@ -13,6 +13,10 @@ concurrency and the alternatives to encode these scenarios in JavaScript
     $ npm install
     $ make benchmark
     
+You can run `make benchmark-harmony` to run tests with semi-coroutines by way
+of Harmony generators. Just note that this will only work on Node v0.11.2. You
+can use [n](http://github.com/visionmedia/n) to make that easier for you ;3
+    
 
 ## Scenarios
 
