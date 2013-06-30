@@ -18,6 +18,9 @@ function bench(suite){ return function(name, code) {
 function fastest(suite) {
   return suite.filter('fastest').pluck('name') }
 
+function slowest(suite) {
+  return suite.filter('slowest').pluck('name') }
+
 function run(suite, cb) {
   var err = 0
   suite.on('cycle', function(event) {
@@ -32,7 +35,9 @@ function run(suite, cb) {
                       else             console.log('››', String(bench)) })
 
   suite.on('complete', function() {
-                         console.log('---\nFastest: ' + fastest(this))
+                         console.log('---'
+                                    ,'\nFastest:', fastest(this).join(', ')
+                                    ,'\nSlowest:', slowest(this).join(', '))
                          if (cb)  cb()
 
                          running  = null
