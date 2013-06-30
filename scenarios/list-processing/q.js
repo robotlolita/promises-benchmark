@@ -5,7 +5,8 @@ var listTest = require('./promises')(function(f) {
                                        return d.promise })
 
 module.exports = function(path, noiseFactor) { return function(deferred) {
-  return listTest(path, noiseFactor).then(function(v){
-                                            deferred.resolve() })
-                                    .done()
+  return listTest(path, noiseFactor)
+           .then(function(v){
+                   deferred.resolve() })
+           .done()
 }}

@@ -1,7 +1,8 @@
 // -- Dependencies -----------------------------------------------------
-var fs = require('fs')
-var compose = require('athena').compose
+var fs       = require('fs')
+var compose  = require('athena').compose
 var joinPath = require('path').join
+
 
 // -- Core module ------------------------------------------------------
 module.exports = function(promise) {
@@ -10,6 +11,10 @@ module.exports = function(promise) {
 
   // :: Arraylike -> Array
   var toArray = Function.call.bind([].slice)
+
+  // :: A -> Bool
+  function isString(a) {
+    return typeof a === 'string' }
 
 
   // -- Promise Helpers ------------------------------------------------
@@ -37,14 +42,14 @@ module.exports = function(promise) {
     return promise(function(resolve, reject) {
                      var length = args.length
                      var result = new Array(length)
-                     args.forEach(resolvePromise)
+                     args.map(promiseFrom).forEach(resolvePromise)
 
-                     function resolvePromise(x, i) {
-                       promiseFrom(x).then( function(value) {
-                                              result[i] = value
-                                              if (--length == 0)  resolve(result) }
+                     function resolvePromise(p, i) {
+                       p.then( function(value) {
+                                 result[i] = value
+                                 if (--length == 0)  resolve(result) }
 
-                                          , reject )}})}
+                             , reject )}})}
 
 
   // :: (MaybeThenable A... -> MaybeThenable B)
@@ -88,17 +93,40 @@ module.exports = function(promise) {
 
   // :: MaybeThenable [String] -> Promise Error String
   var join = lift(function(values, separator) {
-                    return values.join(separator) })
+                    return values.join(separator)
+                    return promiseFrom(values).then(function(vs) {
+                      return vs.join(separator)
+                    })})
+
+
+
+  // :: MaybeThenable [String] -> Promise Error [String]
+  function mapSequentially(f){ return lift(function(xs) {
+    var length = xs.length
+    var index  = 0
+    var result = new Array(length)
+
+    return promise(function(resolve, reject) {
+                     function next() {
+                       var x = lift(f)(xs[index])
+                       result[index] = x
+
+                       if (++index >= length)  resolve(all(result))
+                       else                    x.then(next) }
+
+                     next() })})}
 
 
   // -- File system interaction ----------------------------------------
 
   // :: Pathname -> Promise Error [Pathname]
   var listDirectory = liftNode(fs.readdir)
+  var readFile      = liftNode(fs.readFile)
 
   // :: Pathname -> Promise Error String
   function read(path) {
-    return liftNode(fs.readFile)(path, { encoding: 'utf-8' }) }
+    return isString(path)?  readFile(path, { encoding: 'utf-8' })
+    :      /* otherwise */  promiseFrom(String(path)) }
 
   // :: Pathname -> Pathname -> Pathname
   function withParent(dir) { return function(base) {
@@ -113,8 +141,7 @@ module.exports = function(promise) {
                          :      /* _ */  Array(n + 1)
                                            .join(0)
                                            .split(0)
-                                           .map(function(_, i){
-                                                  return String(i) })})
+                                           .map(function(_, i){ return i })})
 
 
   // -- The main public interface --------------------------------------
@@ -137,11 +164,10 @@ module.exports = function(promise) {
 
   // :: Pathname, Number -> Promise Error [String]
   return function main(path, noiseFactor) {
-    var readInPath = compose(read, withParent(path))
-    var files      = map(readInPath)(listDirectory(path))
+    var files      = map(withParent(path))(listDirectory(path))
     var noise      = noiseList(noiseFactor)
     var wholeList  = flatten(all([files, noise]))
 
-    return join(wholeList, '\n') }
+    return join(mapSequentially(read)(wholeList), '\n') }
 
 }

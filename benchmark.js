@@ -1,9 +1,14 @@
 var Benchmark = require('benchmark')
 
+var queue   = []
+var running = null
+
 function suite(name, block) {
   var s = new Benchmark.Suite(name)
   block(bench(s))
-  run(s)
+
+  if (!running)  run(s)
+  else           queue.push(s)
 }
 
 function bench(suite){ return function(name, code) {
@@ -28,10 +33,17 @@ function run(suite, cb) {
 
   suite.on('complete', function() {
                          console.log('---\nFastest: ' + fastest(this))
-                         if (cb)  cb() })
+                         if (cb)  cb()
+
+                         running  = null
+                         var next = queue.shift()
+                         if (next)  run(next) })
 
   console.log('\x1B[0;36m\n:: Benchmarks for:', suite.name)
   console.log('   Sit back, this can take a while.\x1B[0m\n---')
+
+  running = suite
+
   suite.run({ defer: true, async: true }) }
 
 
