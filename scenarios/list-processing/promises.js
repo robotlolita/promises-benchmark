@@ -93,7 +93,6 @@ module.exports = function(promise) {
 
   // :: MaybeThenable [String] -> Promise Error String
   var join = lift(function(values, separator) {
-                    return values.join(separator)
                     return promiseFrom(values).then(function(vs) {
                       return vs.join(separator)
                     })})

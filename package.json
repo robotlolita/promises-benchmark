@@ -23,7 +23,8 @@
     "q": "~0.9.6",
     "benchmark": "~1.0.0",
     "athena": "~0.2.0",
-    "pinky": "~0.1.2",
+    "pinky": "~0.1.3",
+    "pinky-sync": "git://github.com/killdream/pinky.git#sync-then",
     "when": "~2.1.1",
     "deferred": "~0.6.5",
     "async": "~0.2.9"
