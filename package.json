@@ -17,5 +17,8 @@
   ],
   "author": "Quildreen \"Sorella\" Motta",
   "license": "WTFPL",
-  "readmeFilename": "README.md"
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "q": "~0.9.6"
+  }
 }
