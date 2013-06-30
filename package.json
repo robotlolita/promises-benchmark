@@ -27,6 +27,7 @@
     "pinky-sync": "git://github.com/killdream/pinky.git#sync-then",
     "when": "~2.1.1",
     "deferred": "~0.6.5",
-    "async": "~0.2.9"
+    "async": "~0.2.9",
+    "co": "~1.4.0"
   }
 }

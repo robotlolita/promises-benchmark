@@ -4,8 +4,12 @@ var benchmark = require('../../benchmark')
 var dirname     = path.join(__dirname, '../../fixtures/files')
 
 function done(deferred) { deferred.resolve() }
+function isHarmony() {
+  return process.execArgv.indexOf('--harmony-generators') != -1 }
 
 function run(noise, bench) {
+  if (isHarmony()) bench('Co', require('./co')(dirname, noise))
+  bench('Callbacks (baseline)', require('./callbacks')(dirname, noise, done))
   bench('Async', require('./async')(dirname, noise, done))
   bench('Pinky', require('./pinky')(dirname, noise))
   bench('Pinky (synchronous)', require('./pinky-sync')(dirname, noise))

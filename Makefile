@@ -7,4 +7,7 @@ initialise:
 benchmark:
 	node scenarios/list-processing/index.js
 
+benchmark-harmony:
+	node --harmony-generators scenarios/list-processing/index.js
+
 .PHONY: benchmark
