@@ -6,7 +6,7 @@ var dirname     = path.join(__dirname, '../../fixtures/files')
 function done(deferred) { deferred.resolve() }
 
 function run(noise, bench) {
-  bench('Callbacks', require('./callbacks')(dirname, noise, done))
+  bench('Async', require('./async')(dirname, noise, done))
   bench('Pinky', require('./pinky')(dirname, noise))
   bench('Pinky (synchronous)', require('./pinky-sync')(dirname, noise))
   bench('Q', require('./q')(dirname, noise))
