@@ -1,5 +1,7 @@
 // -- Dependencies -----------------------------------------------------
 var fs = require('fs')
+var compose = require('athena').compose
+var joinPath = require('path').join
 
 // -- Core module ------------------------------------------------------
 module.exports = function(promise) {
@@ -30,9 +32,8 @@ module.exports = function(promise) {
     :      /* otherwise */  promise(function(resolve){ resolve(a) })}
 
 
-  // :: Promise Error [A]... -> Promise Error [[A]]
-  function all(/* ... */) {
-    var args = toArray(arguments)
+  // :: [Promise Error A] -> Promise Error [A]
+  function all(args) {
     return promise(function(resolve, reject) {
                      var length = args.length
                      var result = new Array(length)
@@ -60,20 +61,22 @@ module.exports = function(promise) {
   //    -> Promise Error B
   function liftNode(f) { return function() {
     var args = toArray(arguments)
-    return all(args).then(function(values) {
-                            return f.apply(null, values.concat([resolver])) })
+    return promise(function(resolve, reject) {
+                     all(args).then(function(values) {
+                                      var args = values.concat([resolver])
+                                      f.apply(null, args) })
 
-    function resolver(error, values) {
-      return promise(function(resolve, reject) {
+
+                     function resolver(error, values) {
                        if (error)  reject(error)
-                       else        resolve(values) })}}}
+                       else        resolve(values) }})}}
 
 
   // -- List processing helpers ----------------------------------------
 
-  // :: (A -> B) -> MaybeThenable [A] -> Promise Error B
+  // :: (A -> B) -> MaybeThenable [A] -> Promise Error [B]
   function map(f) { return lift(function(values) {
-                                  return values.map(f) })}
+                                  return all(values.map(f)) })}
 
 
   // :: MaybeThenable [[A]] -> Promise Error [A]
@@ -97,15 +100,21 @@ module.exports = function(promise) {
   function read(path) {
     return liftNode(fs.readFile)(path, { encoding: 'utf-8' }) }
 
+  // :: Pathname -> Pathname -> Pathname
+  function withParent(dir) { return function(base) {
+    return joinPath(dir, base) }}
+
 
   // -- Other generators -----------------------------------------------
 
   // :: Number -> Promise () [String]
   var noiseList = lift(function(n) {
-                         return Array(n + 1)
-                                  .join(0)
-                                  .split(0)
-                                  .map(function(_, i){ return String(i) })})
+                         return n <= 0?  []
+                         :      /* _ */  Array(n + 1)
+                                           .join(0)
+                                           .split(0)
+                                           .map(function(_, i){
+                                                  return String(i) })})
 
 
   // -- The main public interface --------------------------------------
@@ -128,9 +137,10 @@ module.exports = function(promise) {
 
   // :: Pathname, Number -> Promise Error [String]
   return function main(path, noiseFactor) {
-    var files = map(read)(listDirectory(path))
-    var noise = noiseList(noiseFactor)
-    var wholeList = flatten(all(files, noise))
+    var readInPath = compose(read, withParent(path))
+    var files      = map(readInPath)(listDirectory(path))
+    var noise      = noiseList(noiseFactor)
+    var wholeList  = flatten(all([files, noise]))
 
     return join(wholeList, '\n') }
 

@@ -19,6 +19,8 @@
   "license": "WTFPL",
   "readmeFilename": "README.md",
   "dependencies": {
-    "q": "~0.9.6"
+    "q": "~0.9.6",
+    "benchmark": "~1.0.0",
+    "athena": "~0.2.0"
   }
 }
