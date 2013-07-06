@@ -82,4 +82,10 @@ function run(suite, cb) {
   suite.run({ defer: true, async: true }) }
 
 
-module.exports = { suite: suite, run: run }
+function isHarmony() {
+  return process.execArgv.indexOf('--harmony-generators') != -1 }
+
+
+module.exports = { suite: suite
+                 , run: run
+                 , isHarmony: isHarmony }

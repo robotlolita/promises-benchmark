@@ -1,11 +1,10 @@
 var path      = require('path')
 var benchmark = require('../../benchmark')
 
-var dirname     = path.join(__dirname, '../../fixtures/files')
+var isHarmony = benchmark.isHarmony
+var dirname   = path.join(__dirname, '../../fixtures/files')
 
 function done(deferred) { deferred.resolve() }
-function isHarmony() {
-  return process.execArgv.indexOf('--harmony-generators') != -1 }
 
 function run(noise, bench) {
   if (isHarmony()) bench('Co', require('./co')(dirname, noise))
