@@ -18,18 +18,18 @@ function run(noise, bench) {
   bench('Deferred', require('./deferred')(dirname, noise))
 }
 
-benchmark.suite('List processing (no noise)', function(bench) {
+benchmark.suite('Serial (no noise)', function(bench) {
   run(0, bench)
 })
 
-benchmark.suite('List processing (some noise)', function(bench) {
+benchmark.suite('Serial (some noise)', function(bench) {
   run(50, bench)
 })
 
-benchmark.suite('List processing (noisy)', function(bench) {
+benchmark.suite('Serial (noisy)', function(bench) {
   run(100, bench)
 })
 
-benchmark.suite('List processing (mostly noise)', function(bench) {
+benchmark.suite('Serial (mostly noise)', function(bench) {
   run(300, bench)
 })
