@@ -5,9 +5,11 @@ initialise:
 	tools/generate-files.sh
 
 benchmark:
-	node scenarios/list-processing/index.js
+	node scenarios/serial/index.js
+	node scenarios/parallel/index.js
 
 benchmark-harmony:
-	node --harmony-generators scenarios/list-processing/index.js
+	node --harmony-generators scenarios/serial/index.js
+	node --harmony-generators scenarios/parallel/index.js
 
 .PHONY: benchmark
