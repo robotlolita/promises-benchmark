@@ -1,4 +1,5 @@
 var Benchmark = require('benchmark')
+var path      = require('path')
 var fs        = require('fs')
 // sync so we don't fuck up with other benchs
 var read      = fs.readFileSync
@@ -88,4 +89,6 @@ function isHarmony() {
 
 module.exports = { suite: suite
                  , run: run
-                 , isHarmony: isHarmony }
+                 , isHarmony: isHarmony
+                 , fixtureDir: path.join(__dirname, 'fixtures', 'files')
+                 }

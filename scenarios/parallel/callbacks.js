@@ -1,11 +1,4 @@
-var cache = {}
-
-function read(name, done) {
-    name in cache?   done(cache[name])
-  : /* otherwise */  slowRead()
-
-  function slowRead() {
-    setTimeout(function(){ done(cache[name] = name) }, name) }}
+var utils = require('./utils')
 
 
 function parallel(xs, f, done) {
@@ -13,11 +6,21 @@ function parallel(xs, f, done) {
   var result = new Array(len)
 
   xs.forEach(function(x, i) {
-               f(x, function(v) {
-                      result[i] = v
-                      if (--len == 0) done(result) })})}
+               f(x, function(err, v) {
+                      if (err)  done(err)
+                      else      { result[i] = v
+                                  if (--len == 0) done(null, result) }})})}
 
 
-module.exports = function(list, done) { return function(deferred) {
-  cache = {}
-  parallel(list, read, function(r){ done(deferred) }) }}
+module.exports = {
+  cached: function(list, done) { return function(deferred) {
+    utils.cache = {}
+    parallel(list, utils.read, function(err, r){
+                                 if (err) throw err
+                                 else     done(deferred) }) }}
+
+, naive: function(list, done) { return function(deferred) {
+    parallel(list, utils.readFile, function(err, r){
+                                     if (err) throw err
+                                     done(deferred) })}}
+}

@@ -1,12 +1,13 @@
 var co    = require('co')
+var fs    = require('fs')
 var cache = {}
 
-function delay(ms, f){ return function(done) {
-  setTimeout(function(){ done(null, f()) }, ms) }}
+
+var readFile = co.wrap(fs.readFile)
 
 function *read(name) {
   return name in cache?   cache[name]
-  :      /* otherwise */  yield delay(name, function(){ return cache[name] = name })}
+  :      /* otherwise */  cache[name] = yield readFile(name) }
 
 
 module.exports = function(list, done) { return function(deferred) {

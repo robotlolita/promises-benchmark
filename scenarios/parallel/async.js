@@ -1,14 +1,15 @@
 var async = require('async')
-var cache = {}
+var utils = require('./utils')
 
-function read(name, done) {
-    name in cache?   done(null, cache[name])
-  : /* otherwise */  slowRead()
+module.exports = {
+  cached: function(list, done) { return function(deferred) {
+    utils.cache = {}
+    async.map(list, utils.read, function(err, r){
+                                  if (err) throw err
+                                  else     done(deferred) }) }}
 
-  function slowRead() {
-    setTimeout(function(){ done(null, cache[name] = name) }, name) }}
-
-
-module.exports = function(list, done) { return function(deferred) {
-  cache = {}
-  async.map(list, read, function(_, r){ done(deferred) }) }}
+, naive: function(list, done) { return function(deferred) {
+    async.map(list, utils.readFile, function(err, r){
+                                      if (err) throw err
+                                      done(deferred) })}}
+}
