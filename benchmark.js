@@ -69,7 +69,7 @@ function run(suite, cb) {
                          log('---'
                             ,'\nFastest:', fastest(this).join(', ')
                             ,'\nSlowest:', slowest(this).join(', '))
-                         if (cb)  cb(results, bench)
+                         if (cb)  cb(results, suite)
 
                          running  = null
                          var next = queue.shift()
