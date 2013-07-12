@@ -14,7 +14,7 @@ function suite(name, block) {
   var s = new Benchmark.Suite(name)
   block(bench(s))
 
-  if (!running)  run(s, saveAs(name))
+  if (!running)  run(s, save)
   else           queue.push(s)
 }
 
@@ -22,19 +22,19 @@ function hasErrors(data) {
   return data.some(function(a){ return a.error })
 }
 
-function saveAs(name){ return function(data) {
+function save(data, bench) {
   if (hasErrors(data))  return log('Not saving because errors occurred.')
 
   var previous = exists('bench.json')?  read('bench.json', 'utf-8')
                : /* otherwise */        '[]'
 
   var resultStream = JSON.parse(previous)
-  resultStream.push({ name:  name
+  resultStream.push({ name:  bench.name
                     , date:  new Date
                     , stats: data })
 
   write('bench.json', JSON.stringify(resultStream))
-}}
+}
 
 function bench(suite){ return function(name, code) {
   suite.add(name, { defer: true, fn: code })
@@ -69,7 +69,7 @@ function run(suite, cb) {
                          log('---'
                             ,'\nFastest:', fastest(this).join(', ')
                             ,'\nSlowest:', slowest(this).join(', '))
-                         if (cb)  cb(results)
+                         if (cb)  cb(results, bench)
 
                          running  = null
                          var next = queue.shift()
