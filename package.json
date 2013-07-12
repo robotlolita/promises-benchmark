@@ -29,5 +29,11 @@
     "deferred": "~0.6.5",
     "async": "~0.2.9",
     "co": "~1.4.0"
+  },
+  "devDependencies": {
+    "noisyo": "~0.1.1",
+    "pinky-for-fun": "~0.2.1",
+    "pinky-combinators": "~0.1.1",
+    "lingerie": "~0.1.0"
   }
 }
