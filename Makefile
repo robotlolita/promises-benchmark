@@ -5,8 +5,8 @@ initialise:
 	tools/generate-files.sh
 
 benchmark:
-	#node scenarios/serial/index.js
-	#node scenarios/light-serial/index.js
+	node scenarios/serial/index.js
+	node scenarios/light-serial/index.js
 	node scenarios/parallel/index.js
 
 benchmark-harmony:
