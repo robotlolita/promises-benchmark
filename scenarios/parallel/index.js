@@ -30,8 +30,9 @@ function run(dupFactor, bench) {
   bench('Pinky (synchronous)', require('./pinky-sync')(xs))
   bench('Q', require('./q')(xs))
   bench('When', require('./when')(xs))
-  bench('Deferred', require('./deferred')(xs)) }
-
+  bench('Deferred', require('./deferred')(xs))
+  bench('microPromise', require('./micropromise')(xs)) 
+}
 
 benchmark.suite('Parallelism (no cache)', function(bench) {
   run(0, bench) })
