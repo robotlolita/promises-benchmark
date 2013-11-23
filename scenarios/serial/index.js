@@ -15,6 +15,7 @@ function run(noise, bench) {
   bench('Q', require('./q')(dirname, noise))
   bench('When', require('./when')(dirname, noise))
   bench('Deferred', require('./deferred')(dirname, noise))
+  bench('microPromise', require('./micropromise')(dirname, noise))
 }
 
 benchmark.suite('Serial (no noise)', function(bench) {
