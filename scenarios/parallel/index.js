@@ -29,6 +29,7 @@ function run(dupFactor, bench) {
   bench('Pinky', require('./pinky')(xs))
   bench('Pinky (synchronous)', require('./pinky-sync')(xs))
   bench('Q', require('./q')(xs))
+  bench('Slowises', require('./slowises')(xs))
   bench('When', require('./when')(xs))
   bench('Deferred', require('./deferred')(xs))
   bench('microPromise', require('./micropromise')(xs)) 

@@ -13,6 +13,7 @@ function run(noise, bench) {
   bench('Pinky', require('./pinky')(dirname, noise))
   bench('Pinky (synchronous)', require('./pinky-sync')(dirname, noise))
   bench('Q', require('./q')(dirname, noise))
+  bench('Slowises', require('./slowises')(dirname, noise))
   bench('When', require('./when')(dirname, noise))
   bench('Deferred', require('./deferred')(dirname, noise))
   bench('microPromise', require('./micropromise')(dirname, noise))
