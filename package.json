@@ -29,7 +29,7 @@
     "deferred": "~0.6.6",
     "async": "~0.2.9",
     "co": "~1.4.0",
-    "micropromise": "~0.3.0"
+    "micropromise": "~0.4.0"
   },
   "devDependencies": {
     "noisyo": "~0.1.1",
